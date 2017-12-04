@@ -1,0 +1,46 @@
+/*namespace org.example.biznet*/
+
+namespace blockchain.poc
+
+abstract participant Owner identified by guid {
+  o String guid
+  o OwnerType ownerType
+  --> Record record
+}
+
+enum OwnerType {
+  o PATIENT
+  o GP
+  o TRUST
+}
+
+participant Patient extends Owner {
+  o String nhsNumber
+  o String firstname
+  o String surname
+}
+
+participant Gp extends Owner {
+  o String code
+  o String contact
+  o String ccg
+}
+
+participant Trust extends Owner {
+  o String code
+  o String contact
+  o String type
+}
+
+
+asset Record identified by id {
+  o String id
+  o String firstname
+  o String surname
+}
+
+
+transaction transferRecordAccess {
+  o String newAccessor
+  --> Asset Record
+}
