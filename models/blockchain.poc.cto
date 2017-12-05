@@ -1,12 +1,5 @@
 namespace blockchain.poc
 
-participant Patient identified by nhsNumber {
-  o String nhsNumber
-  o String firstname
-  o String surname
-  --> Record record
-}
-
 asset Record identified by id {
   o String id
   o String clinicalDatasetLink
@@ -17,15 +10,34 @@ asset Record identified by id {
 }
 
 
+enum AccessorType {
+  o GP
+  o TRUST
+}
+
+enum AccessorStatus {
+  o SENDING
+  o RECEIVING
+  o CLOSED
+}
+
+enum TrustType {
+  o ACUTE
+}
+
+
 abstract participant Accessor identified by code {
   o String code
   o String contact
   o AccessorType accessorType
+  o AccessorStatus accessorStatus
 }
 
-enum AccessorType {
-  o GP
-  o TRUST
+participant Patient identified by nhsNumber {
+  o String nhsNumber
+  o String firstname
+  o String surname
+  --> Record record
 }
 
 participant Gp extends Accessor {
@@ -33,13 +45,14 @@ participant Gp extends Accessor {
 }
 
 participant Trust extends Accessor {
-  o String type
+  o TrustType trustType
 }
 
 
 transaction TransferAccess {
   --> Record record
-  --> Accessor to
+  --> Accessor sender
+  --> Accessor receiver
 }
 
 event TransferNotification {
