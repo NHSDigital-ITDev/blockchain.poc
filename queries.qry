@@ -1,0 +1,37 @@
+query selectRecords {
+  description: "Select all records"
+  statement:
+      SELECT blockchain.poc.Record
+}
+
+query selectAccessors {
+  description: "Select all accessors"
+  statement:
+      SELECT blockchain.poc.Accessor
+}
+
+query selectPatients {
+  description: "Select all patients"
+  statement:
+      SELECT blockchain.poc.Patient
+}
+
+query selectGps {
+  description: "Select all GPs"
+  statement:
+      SELECT blockchain.poc.Gp
+}
+
+query selectTrusts {
+  description: "Select all trusts"
+  statement:
+      SELECT blockchain.poc.Trust
+}
+
+
+query selectAccessorsByPatient {
+  description: "Select all accessors for the given patient"
+  statement:
+      SELECT blockchain.poc.Accessor
+          FROM _$patient.record.accessors
+}

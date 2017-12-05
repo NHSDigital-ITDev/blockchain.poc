@@ -1,32 +1,10 @@
 namespace blockchain.poc
 
-abstract participant Accessor identified by guid {
-  o String guid
-  o AccessorType accessorType
-}
-
-enum AccessorType {
-  o PATIENT
-  o GP
-  o TRUST
-}
-
-participant Patient extends Accessor {
+participant Patient identified by nhsNumber {
   o String nhsNumber
   o String firstname
   o String surname
-}
-
-participant Gp extends Accessor {
-  o String code
-  o String contact
-  o String ccg
-}
-
-participant Trust extends Accessor {
-  o String code
-  o String contact
-  o String type
+  --> Record record
 }
 
 asset Record identified by id {
@@ -34,8 +12,30 @@ asset Record identified by id {
   o String clinicalDatasetLink
   o String cwtDatasetLink
   o String key
-  --> Accessor accessor
+  --> Accessor[] accessors
+  --> Patient patient
 }
+
+
+abstract participant Accessor identified by code {
+  o String code
+  o String contact
+  o AccessorType accessorType
+}
+
+enum AccessorType {
+  o GP
+  o TRUST
+}
+
+participant Gp extends Accessor {
+  o String ccg
+}
+
+participant Trust extends Accessor {
+  o String type
+}
+
 
 transaction TransferAccess {
   --> Record record
