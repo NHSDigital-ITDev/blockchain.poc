@@ -29,7 +29,6 @@ participant Trust extends Accessor {
   o String type
 }
 
-
 asset Record identified by id {
   o String id
   o String clinicalDatasetLink
@@ -38,8 +37,11 @@ asset Record identified by id {
   --> Accessor accessor
 }
 
-
 transaction TransferAccess {
   --> Record record
-  --> Accessor accessor
+  --> Accessor to
+}
+
+event TransferNotification {
+  --> Record record
 }
