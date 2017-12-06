@@ -53,3 +53,7 @@ chaincode/pkg
 
 *.swp
 
+composer-data/*
+composer.sh
+networkadmin.card
+test-business-network@0.0.1.bna

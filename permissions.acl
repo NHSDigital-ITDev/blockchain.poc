@@ -1,12 +1,9 @@
-/**
- * Access control rules for tutorial-network
- */
 rule Default {
-    description: "Allow all participants access to all resources"
-    participant: "ANY"
-    operation: ALL
-    resource: "blockchain.poc.*"
-    action: ALLOW
+  description: "Allow all participants access to all resources"
+  participant: "ANY"
+  operation: ALL
+  resource: "blockchain.poc.*"
+  action: ALLOW
 }
 
 rule SystemACL {
@@ -18,28 +15,28 @@ rule SystemACL {
 }
 
 rule R1{
- description: "As a participant I cannot view another patient record"
- participant(p): "blockchain.poc.Patient"
- operation: CREATE, READ, UPDATE
- resource(r): "blockchain.poc.Record"
- condition: (p.nhsNumber != r.Patient.nhsNumber)
- action: DENY
+  description: "As a participant I cannot view another patient record"
+  participant(p): "blockchain.poc.Patient"
+  operation: CREATE, READ, UPDATE
+  resource(r): "blockchain.poc.Record"
+  condition: (p.nhsNumber != r.Patient.nhsNumber)
+  action: DENY
 }
 
 rule R2{
- description: "As a trust I am only allowed to manage a record in my care"
- participant(t): "blockchain.poc.Trust"
- operation: CREATE, READ, UPDATE
- resource(r): "blockchain.poc.Record"
- condition: (!r.accessors.includes(t))
- action: DENY
+  description: "As a trust I am only allowed to manage a record in my care"
+  participant(t): "blockchain.poc.Trust"
+  operation: CREATE, READ, UPDATE
+  resource(r): "blockchain.poc.Record"
+  condition: (!r.accessors.includes(t))
+  action: DENY
 }
 
 rule R3{
- description: "As a GP I am only allowed to manage a record in my care"
- participant(g): "blockchain.poc.Gp"
- operation: CREATE, READ, UPDATE
- resource(r): "blockchain.poc.Record"
- condition: (!r.accessors.includes(g))
- action: DENY
+  description: "As a GP I am only allowed to manage a record in my care"
+  participant(g): "blockchain.poc.Gp"
+  operation: CREATE, READ, UPDATE
+  resource(r): "blockchain.poc.Record"
+  condition: (!r.accessors.includes(g))
+  action: DENY
 }

@@ -16,13 +16,14 @@ enum AccessorType {
 }
 
 enum AccessorStatus {
+  o CLOSED
   o SENDING
   o RECEIVING
-  o CLOSED
 }
 
 enum TrustType {
   o ACUTE
+  o MH
 }
 
 
@@ -55,6 +56,31 @@ transaction TransferAccess {
   --> Accessor receiver
 }
 
+transaction EnableReceive {
+  --> Accessor accessor
+}
+
+transaction EnableSend {
+  --> Accessor accessor
+}
+
+transaction CloseAccessor {
+  --> Accessor accessor
+}
+
+
 event TransferNotification {
   --> Record record
+}
+
+event EnableSendNotification {
+  --> Accessor accessor
+}
+
+event EnableReceiveNotification {
+  --> Accessor accessor
+}
+
+event CloseAccessorNotification {
+  --> Accessor accessor
 }
