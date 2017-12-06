@@ -1,329 +1,222 @@
 {
 	"info": {
 		"name": "Hyperledger",
-		"_postman_id": "f0ea91e3-e5ad-5231-bac9-02bc8b333c18",
+		"_postman_id": "05623dc1-75f9-93c2-79d8-af201ba150f7",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "blockchain.poc",
-			"description": "",
 			"item": [
 				{
-					"name": "Add Patient",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"blockchain.poc.Patient\",\n  \"nhsNumber\": \"0123456789\",\n  \"firstname\": \"Patient\",\n  \"surname\": \"Zero\",\n  \"record\": \"resource:blockchain.poc.Record#1\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Patient",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Patient"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Add Record",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"blockchain.poc.Record\",\n  \"id\": \"1\",\n  \"clinicalDatasetLink\": \"//clinicalDatasetLink\",\n  \"cwtDatasetLink\": \"//cwtDatasetLink\",\n  \"key\": \"0a1b2c3d4e5f6g7h8i9j\",\n  \"accessors\": [],\n  \"patient\": \"resource:blockchain.poc.Patient#0123456789\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Record",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Record"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Add GP",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"blockchain.poc.Gp\",\n  \"ccg\": \"CCG1\",\n  \"code\": \"1234\",\n  \"contact\": \"gp1234@nhs.net\",\n  \"accessorType\": \"GP\",\n  \"accessorStatus\": \"CLOSED\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Gp",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Gp"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Add Trust",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"blockchain.poc.Trust\",\n  \"trustType\": \"ACUTE\",\n  \"code\": \"2345\",\n  \"contact\": \"trust2345@nhs.net\",\n  \"accessorType\": \"TRUST\",\n  \"accessorStatus\": \"CLOSED\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Trust",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Trust"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Make Transfer",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"blockchain.poc.TransferAccess\",\n  \"record\": \"resource:blockchain.poc.Record#1\",\n  \"sender\": \"resource:blockchain.poc.Gp#1234\",\n  \"receiver\": \"resource:blockchain.poc.Trust#2345\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Trust",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Trust"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "tutorial",
-			"description": "",
-			"item": [
-				{
-					"name": "Add Commodity",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"org.acme.biznet.Commodity\",\n  \"tradingSymbol\": \"CC\",\n  \"description\": \"Cocoa\",\n  \"mainExchange\": \"ICE\",\n  \"quantity\": 80,\n  \"owner\": \"resource:org.acme.biznet.Trader#TRADER2\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Commodity",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Commodity"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Get Commodities",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"org.acme.biznet.Trader\",\n  \"tradeId\": \"TRADER1\",\n  \"firstName\": \"Jenny\",\n  \"lastName\": \"Jones\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/queries/selectCommodities",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"queries",
-								"selectCommodities"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Add Trader",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"org.acme.biznet.Trader\",\n  \"tradeId\": \"TRADER1\",\n  \"firstName\": \"Jenny\",\n  \"lastName\": \"Jones\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/Trader",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Trader"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Get Commodities By Exchange",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"$class\": \"org.acme.biznet.Trader\",\n  \"tradeId\": \"TRADER1\",\n  \"firstName\": \"Jenny\",\n  \"lastName\": \"Jones\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:3000/api/queries/selectCommoditiesByExchange?exchange=EURONEXT",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"queries",
-								"selectCommoditiesByExchange"
-							],
-							"query": [
-								{
-									"key": "exchange",
-									"value": "EURONEXT",
-									"equals": true
+					"name": "Add Entities",
+					"description": "",
+					"item": [
+						{
+							"name": "Add Patient",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.Patient\",\n  \"nhsNumber\": \"0123456789\",\n  \"firstname\": \"Patient\",\n  \"surname\": \"Zero\",\n  \"record\": \"resource:blockchain.poc.Record#0\"\n  IRANU\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/Patient",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"Patient"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"description": ""
-					},
-					"response": []
+						{
+							"name": "Add Record",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.Record\",\n  \"id\": \"0\",\n  \"clinicalDatasetLink\": \"//clinicalDatasetLink\",\n  \"cwtDatasetLink\": \"//cwtDatasetLink\",\n  \"key\": \"0a1b2c3d4e5f6g7h8i9j\",\n  \"accessors\": [\"blockchain.poc.Gp#0123\"],\n  \"patient\": \"resource:blockchain.poc.Patient#0123456789\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/Record",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"Record"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add GP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.Gp\",\n  \"ccg\": \"CCG1\",\n  \"code\": \"0123\",\n  \"contact\": \"gp0123@nhs.net\",\n  \"accessorType\": \"GP\",\n  \"accessorStatus\": \"CLOSED\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/Gp",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"Gp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Trust",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.Trust\",\n  \"trustType\": \"ACUTE\",\n  \"code\": \"1234\",\n  \"contact\": \"trust1234@nhs.net\",\n  \"accessorType\": \"TRUST\",\n  \"accessorStatus\": \"CLOSED\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/Trust",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"Trust"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
 				},
 				{
-					"name": "Delete High Commodities",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
+					"name": "Transactions",
+					"description": "",
+					"item": [
+						{
+							"name": "Make Transfer",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.TransferAccess\",\n  \"record\": \"resource:blockchain.poc.Record#0\",\n  \"sender\": \"resource:blockchain.poc.Gp#0123\",\n  \"receiver\": \"resource:blockchain.poc.Trust#1234\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/Trust",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"Trust"
+									]
+								}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "http://localhost:3000/api/RemoveHighQuantityCommodities",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"RemoveHighQuantityCommodities"
-							]
+						{
+							"name": "EnableReceive",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.EnableSend\",\n  \"accessor\": \"resource:blockchain.poc.Gp#0123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/EnableSend",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"EnableSend"
+									]
+								},
+								"description": ""
+							},
+							"response": []
 						},
-						"description": ""
-					},
-					"response": []
+						{
+							"name": "EnableReceive",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"$class\": \"blockchain.poc.EnableReceive\",\n  \"accessor\": \"resource:blockchain.poc.Trust#1234\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/EnableReceive",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"EnableReceive"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
 				}
 			]
 		}
