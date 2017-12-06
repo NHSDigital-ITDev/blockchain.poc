@@ -10,6 +10,14 @@ rule SystemACL {
   action: ALLOW
 }
 
+rule NetworkAdminUser {
+   description: "Grant business network administrators full access to user resources"
+   participant: "org.hyperledger.composer.system.NetworkAdmin"
+   operation: ALL
+   resource: "**"
+   action: ALLOW
+}
+
 rule RT1{
  description: "As a Trust I am able to see all GPs"
  participant: "blockchain.poc.Trust"
