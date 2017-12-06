@@ -35,3 +35,10 @@ query selectAccessorsByPatient {
       SELECT blockchain.poc.Accessor
           FROM _$patient.record.accessors
 }
+
+query selectRecordForPatient {
+  description: "Select the record for the given patient"
+  statement:
+      SELECT blockchain.poc.Record
+          WHERE (patient == _$patient)
+}
