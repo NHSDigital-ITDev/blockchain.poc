@@ -107,6 +107,6 @@ rule RP3{
  participant(p): "blockchain.poc.Patient"
  operation: READ
  resource(r): "blockchain.poc.Record"
- condition: (p.nhsNumber == r.Patient.nhsNumber)
+ condition: (p.nhsNumber == r.patient.nhsNumber)
  action: ALLOW
 }
