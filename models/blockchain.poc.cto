@@ -52,7 +52,11 @@ participant Trust extends Accessor {
 
 transaction TransferAccess {
   --> Record record
-  --> Accessor sender
+  --> Accessor receiver
+}
+
+transaction GrantAccess {
+  --> Patient patient
   --> Accessor receiver
 }
 
@@ -70,6 +74,10 @@ transaction CloseAccessor {
 
 
 event TransferNotification {
+  --> Record record
+}
+
+event GrantNotification {
   --> Record record
 }
 

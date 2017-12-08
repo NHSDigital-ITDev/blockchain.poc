@@ -1,5 +1,5 @@
 /**
- * Access control rules for tutorial-network
+ * Access control rules for test-business-network
  */
 
 rule SystemACL {
@@ -11,102 +11,116 @@ rule SystemACL {
 }
 
 rule NetworkAdminUser {
-   description: "Grant business network administrators full access to user resources"
-   participant: "org.hyperledger.composer.system.NetworkAdmin"
-   operation: ALL
-   resource: "**"
-   action: ALLOW
+  description: "Grant business network administrators full access to user resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "**"
+  action: ALLOW
 }
 
-rule RT1{
- description: "As a Trust I am able to see all GPs"
- participant: "blockchain.poc.Trust"
- operation: READ
- resource: "blockchain.poc.Gp"
- action: ALLOW
+
+rule RT1 {
+  description: "As a Trust I am able to see all GPs"
+  participant: "blockchain.poc.Trust"
+  operation: READ
+  resource: "blockchain.poc.Gp"
+  action: ALLOW
 }
 
-rule RT2{
- description: "As a Trust I am able to see all Trusts"
- participant: "blockchain.poc.Trust"
- operation: READ
- resource: "blockchain.poc.Trust"
- action: ALLOW
+rule RT2 {
+  description: "As a Trust I am able to see all Trusts"
+  participant: "blockchain.poc.Trust"
+  operation: READ
+  resource: "blockchain.poc.Trust"
+  action: ALLOW
 }
 
-rule RT3{
- description: "As a trust I am able to manage a record in my care"
- participant(t): "blockchain.poc.Trust"
- operation: READ, UPDATE
- resource(r): "blockchain.poc.Record"
- condition: (r.accessors.includes(t))
- action: ALLOW
+rule RT3 {
+  description: "As a Trust I am able to manage a record in my care"
+  participant(t): "blockchain.poc.Trust"
+  operation: READ, UPDATE
+  resource(r): "blockchain.poc.Record"
+  condition: (r.accessors.includes(t))
+  action: ALLOW
 }
 
-rule RT4{
- description: "As a Trust I am able to create a record"
- participant: "blockchain.poc.Trust"
- operation: CREATE
- resource: "blockchain.poc.Record"
- action: ALLOW
+rule RT4 {
+  description: "As a Trust I am able to create a record"
+  participant: "blockchain.poc.Trust"
+  operation: CREATE
+  resource: "blockchain.poc.Record"
+  action: ALLOW
 }
 
-rule RG1{
- description: "As a GP I am able to see all GPs"
- participant: "blockchain.poc.Gp"
- operation: READ
- resource: "blockchain.poc.Gp"
- action: ALLOW
+rule RG1 {
+  description: "As a GP I am able to see all GPs"
+  participant: "blockchain.poc.Gp"
+  operation: READ
+  resource: "blockchain.poc.Gp"
+  action: ALLOW
 }
 
-rule RG2{
- description: "As a GP I am able to see all Trust"
- participant: "blockchain.poc.Gp"
- operation: READ
- resource: "blockchain.poc.Trust"
- action: ALLOW
+rule RG2 {
+  description: "As a GP I am able to see all Trusts"
+  participant: "blockchain.poc.Gp"
+  operation: READ
+  resource: "blockchain.poc.Trust"
+  action: ALLOW
 }
 
-rule RG3{
- description: "As a GP I am able to manage a record in my care"
- participant(g): "blockchain.poc.Gp"
- operation: READ, UPDATE
- resource(r): "blockchain.poc.Record"
- condition: (r.accessors.includes(g))
- action: ALLOW
+rule RG3 {
+  description: "As a GP I am able to manage a record in my care"
+  participant(g): "blockchain.poc.Gp"
+  operation: READ, UPDATE
+  resource(r): "blockchain.poc.Record"
+  condition: (r.accessors.includes(g))
+  action: ALLOW
 }
 
-rule RG4{
- description: "As a GP I am able to create a record"
- participant: "blockchain.poc.Gp"
- operation: CREATE
- resource: "blockchain.poc.Record"
- action: ALLOW
+rule RG4 {
+  description: "As a GP I am able to create a record"
+  participant: "blockchain.poc.Gp"
+  operation: CREATE
+  resource: "blockchain.poc.Record"
+  action: ALLOW
 }
 
-rule RP1{
- description: "As a participant I am able to see Trusts in the transaction"
- participant(p): "blockchain.poc.Patient"
- operation: READ
- resource(t): "blockchain.poc.Trust"
- condition: (p.record.accessors.includes(t))
- action: ALLOW
+rule RP1 {
+  description: "As a Patient I am able to see all GPs"
+  participant: "blockchain.poc.Patient"
+  operation: READ
+  resource: "blockchain.poc.Gp"
+  action: ALLOW
 }
 
-rule RP2{
- description: "As a participant I am able to see GPs in the transaction"
- participant(p): "blockchain.poc.Patient"
- operation: READ
- resource(g): "blockchain.poc.Gp"
- condition: (p.record.accessors.includes(g))
- action: ALLOW
+rule RP2 {
+  description: "As a Patient I am able to see all Trusts"
+  participant: "blockchain.poc.Patient"
+  operation: READ
+  resource: "blockchain.poc.Trust"
+  action: ALLOW
 }
 
-rule RP3{
- description: "As a participant I am able to see my recods"
- participant(p): "blockchain.poc.Patient"
- operation: READ
- resource(r): "blockchain.poc.Record"
- condition: (p.nhsNumber == r.Patient.nhsNumber)
- action: ALLOW
+rule RP3 {
+  description: "As a Patient I can read my record"
+  participant(p): "blockchain.poc.Patient"
+  operation: READ
+  resource(r): "blockchain.poc.Record"
+  condition: (r.patient.nhsNumber == p.nhsNumber)
+  action: ALLOW
+}
+
+rule RP4 {
+  description: "As a participant I am able to see Trusts in the transaction"
+  participant(p): "blockchain.poc.Patient"
+  operation: READ
+  resource(t): "blockchain.poc.Trust"
+  condition: (
+  		p.record.accessors.forEach(function(accessor){
+         	if(accessor.code == t.code){
+              return true;  
+         	}
+     	})
+  )
+  action: ALLOW
 }
