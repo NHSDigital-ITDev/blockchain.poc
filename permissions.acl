@@ -1,144 +1,94 @@
-//Access control rules for test-business-network
-
-//Standard
 rule SystemACL {
-  description:  "System ACL to permit all access"
-  participant: "ANY"
-  operation: ALL
-  resource: "org.hyperledger.composer.system.**"
-  action: ALLOW
-}
-
-rule NetworkAdminUser {
-  description: "Grant business network administrators full access to user resources"
+  description:  "As an admin I can see everything"
   participant: "org.hyperledger.composer.system.NetworkAdmin"
   operation: ALL
   resource: "**"
   action: ALLOW
 }
 
-rule Transaction {
-  description: "As a Patient I am able to see only my transactions"
-  participant: "blockchain.poc.Patient"
+// Participant rules
+
+rule AllParticipantsHaveNetworkAccess {
+  description:  "All participants have access to the network"
+  participant: "org.hyperledger.composer.system.Participant"
   operation: ALL
+  resource: "org.hyperledger.composer.system.Network"
+  action: ALLOW
+}
+
+rule AllParticipantsHaveReadOnlyAssetRegistryAccess {
+  description:  "All participants have access to the asset registry"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
+  resource: "org.hyperledger.composer.system.AssetRegistry"
+  action: ALLOW
+}
+
+rule AllParticipantsHaveReadOnlyParticipantRegistryAccess {
+  description:  "All participants have access to the participants history"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
+  resource: "org.hyperledger.composer.system.ParticipantRegistry"
+  action: ALLOW
+}
+
+rule AllParticipantsHaveReadOnlyTransactionRegistryAccess {
+  description:  "All participants have access to the transaction history"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
   resource: "org.hyperledger.composer.system.TransactionRegistry"
   action: ALLOW
 }
 
-//Trusts
-rule RT1 {
-  description: "As a Trust I am able to see all GPs"
-  participant: "blockchain.poc.Trust"
+rule AParticipantCanSeeOnlyHistorianRecordsToWhichTheySubmitted{
+  description: "Only allow trusts to read historian records referencing transactions they submitted."
+  participant(p): "org.hyperledger.composer.system.Participant"
   operation: READ
-  resource: "blockchain.poc.Gp"
+  resource(hr): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (hr.participantInvoking.getIdentifier() == p.getIdentifier() && hr.transactionType.includes("Asset"))
   action: ALLOW
 }
 
-rule RT2 {
-  description: "As a Trust I am able to see all Trusts"
+// Trust rules
+
+rule ATrustCanSeeAllOtherTrusts {
+  description:  "As a trust I want to able to see all other trusts in the network"
   participant: "blockchain.poc.Trust"
   operation: READ
   resource: "blockchain.poc.Trust"
   action: ALLOW
 }
 
-rule RT3 {
-  description: "As a Trust I am able to manage a record in my care"
+rule ATrustCanSeeAllGps {
+  description:  "As a trust I want to able to see all gp's"
+  participant: "blockchain.poc.Trust"
+  operation: READ
+  resource: "blockchain.poc.Gp"
+  action: ALLOW
+}
+
+rule ATrustCanSeeOnlyPatientsToWhichTheyAreListedAsAnAccessor {
+  description:  "As a trust I want to able to see only patients whose records list me as an accessor"
   participant(t): "blockchain.poc.Trust"
-  operation: READ, UPDATE
-  resource(r): "blockchain.poc.Record"
-  condition: (r.accessors.includes(t))
-  action: ALLOW
-}
-
-rule RT4 {
-  description: "As a Trust I am able to create a record"
-  participant: "blockchain.poc.Trust"
-  operation: CREATE
-  resource: "blockchain.poc.Record"
-  action: ALLOW
-}
-
-//GPs
-rule RG1 {
-  description: "As a GP I am able to see all GPs"
-  participant: "blockchain.poc.Gp"
   operation: READ
-  resource: "blockchain.poc.Gp"
-  action: ALLOW
-}
-
-rule RG2 {
-  description: "As a GP I am able to see all Trusts"
-  participant: "blockchain.poc.Gp"
-  operation: READ
-  resource: "blockchain.poc.Trust"
-  action: ALLOW
-}
-
-rule RG3 {
-  description: "As a GP I am able to manage a record in my care"
-  participant(g): "blockchain.poc.Gp"
-  operation: READ, UPDATE
-  resource(r): "blockchain.poc.Record"
-  condition: (r.accessors.includes(g))
-  action: ALLOW
-}
-
-rule RG4 {
-  description: "As a GP I am able to create a record"
-  participant: "blockchain.poc.Gp"
-  operation: CREATE
-  resource: "blockchain.poc.Record"
-  action: ALLOW
-}
-
-//Patients
-rule RP1 {
-  description: "As a Patient I am able to see all GPs"
-  participant: "blockchain.poc.Patient"
-  operation: READ
-  resource: "blockchain.poc.Gp"
-  action: ALLOW
-}
-
-rule RP2 {
-  description: "As a Patient I am able to see all Trusts"
-  participant: "blockchain.poc.Patient"
-  operation: READ
-  resource: "blockchain.poc.Trust"
-  action: ALLOW
-}
-
-rule RP3 {
-  description: "As a Patient I can read my record"
-  participant(p): "blockchain.poc.Patient"
-  operation: READ
-  resource(r): "blockchain.poc.Record"
-  condition: (r.patient.nhsNumber == p.nhsNumber)
-  action: ALLOW
-}
-
-rule RP4 {
-  description: "As a participant I am able to see Trusts in the transaction"
-  participant(p): "blockchain.poc.Patient"
-  operation: READ
-  resource(t): "blockchain.poc.Trust"
+  resource(p): "blockchain.poc.Patient"  
   condition: (
-  		p.record.accessors.forEach(function(accessor){
-         	if(accessor.code == t.code){
-              return true;  
-         	}
-     	})
-  )
+     p.record.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === t.getIdentifier();  
+     })
+   )
   action: ALLOW
 }
 
-rule RP5 {
-  description: "As a Patient I am able to see myself"
-  participant(p1): "blockchain.poc.Patient"
+rule ATrustCanSeeOnlyRecordsToWhichTheyAreListedAsAnAccessor {
+  description:  "As a trust I want to able to see only records where I am listed as an accessor"
+  participant(t): "blockchain.poc.Trust"
   operation: READ
-  resource(p2): "blockchain.poc.Patient"
-  condition: (p1.nhsNumber == p2.nhsNumber)
+  resource(r): "blockchain.poc.Record"
+  condition: (
+     r.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === t.getIdentifier();  
+     })
+   )
   action: ALLOW
 }
