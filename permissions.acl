@@ -1,7 +1,6 @@
-/**
- * Access control rules for test-business-network
- */
+//Access control rules for test-business-network
 
+//Standard
 rule SystemACL {
   description:  "System ACL to permit all access"
   participant: "ANY"
@@ -18,7 +17,15 @@ rule NetworkAdminUser {
   action: ALLOW
 }
 
+rule Transaction {
+  description: "As a Patient I am able to see only my transactions"
+  participant: "blockchain.poc.Patient"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.TransactionRegistry"
+  action: ALLOW
+}
 
+//Trusts
 rule RT1 {
   description: "As a Trust I am able to see all GPs"
   participant: "blockchain.poc.Trust"
@@ -52,6 +59,7 @@ rule RT4 {
   action: ALLOW
 }
 
+//GPs
 rule RG1 {
   description: "As a GP I am able to see all GPs"
   participant: "blockchain.poc.Gp"
@@ -85,6 +93,7 @@ rule RG4 {
   action: ALLOW
 }
 
+//Patients
 rule RP1 {
   description: "As a Patient I am able to see all GPs"
   participant: "blockchain.poc.Patient"
@@ -122,5 +131,14 @@ rule RP4 {
          	}
      	})
   )
+  action: ALLOW
+}
+
+rule RP5 {
+  description: "As a Patient I am able to see myself"
+  participant(p1): "blockchain.poc.Patient"
+  operation: READ
+  resource(p2): "blockchain.poc.Patient"
+  condition: (p1.nhsNumber == p2.nhsNumber)
   action: ALLOW
 }
