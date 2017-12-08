@@ -6,7 +6,9 @@ rule SystemACL {
   action: ALLOW
 }
 
-// Participant rules
+/***************************************************************** 
+  Participant Rules
+******************************************************************/
 
 rule AllParticipantsHaveNetworkAccess {
   description:  "All participants have access to the network"
@@ -41,7 +43,7 @@ rule AllParticipantsHaveReadOnlyTransactionRegistryAccess {
 }
 
 rule AParticipantCanSeeOnlyHistorianRecordsToWhichTheySubmitted{
-  description: "Only allow trusts to read historian records referencing transactions they submitted."
+  description: "Only allow participants to read historian records referencing transactions they submitted."
   participant(p): "org.hyperledger.composer.system.Participant"
   operation: READ
   resource(hr): "org.hyperledger.composer.system.HistorianRecord"
@@ -49,7 +51,9 @@ rule AParticipantCanSeeOnlyHistorianRecordsToWhichTheySubmitted{
   action: ALLOW
 }
 
-// Trust rules
+/***************************************************************** 
+  Trust Rules
+******************************************************************/
 
 rule ATrustCanSeeAllOtherTrusts {
   description:  "As a trust I want to able to see all other trusts in the network"
@@ -69,12 +73,12 @@ rule ATrustCanSeeAllGps {
 
 rule ATrustCanSeeOnlyPatientsToWhichTheyAreListedAsAnAccessor {
   description:  "As a trust I want to able to see only patients whose records list me as an accessor"
-  participant(t): "blockchain.poc.Trust"
+  participant(p): "blockchain.poc.Trust"
   operation: READ
-  resource(p): "blockchain.poc.Patient"  
+  resource(r): "blockchain.poc.Patient"  
   condition: (
-     p.record.accessors.some(function (accessor) {
-        return accessor.getIdentifier() === t.getIdentifier();  
+     r.record.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === p.getIdentifier();  
      })
    )
   action: ALLOW
@@ -82,12 +86,96 @@ rule ATrustCanSeeOnlyPatientsToWhichTheyAreListedAsAnAccessor {
 
 rule ATrustCanSeeOnlyRecordsToWhichTheyAreListedAsAnAccessor {
   description:  "As a trust I want to able to see only records where I am listed as an accessor"
-  participant(t): "blockchain.poc.Trust"
+  participant(p): "blockchain.poc.Trust"
   operation: READ
   resource(r): "blockchain.poc.Record"
   condition: (
      r.accessors.some(function (accessor) {
-        return accessor.getIdentifier() === t.getIdentifier();  
+        return accessor.getIdentifier() === p.getIdentifier();  
+     })
+   )
+  action: ALLOW
+}
+
+/***************************************************************** 
+  Patient Rules
+******************************************************************/
+
+rule APatientShouldOnlyBeAbleToSeeTheirOwnRecord {
+  description:  "As a patient I want to able to see my record"
+  participant(p): "blockchain.poc.Patient"
+  operation: READ
+  resource(r): "blockchain.poc.Record"
+  condition: (p.getIdentifier() === r.patient.getIdentifier())
+  action: ALLOW
+}
+
+rule APatientShouldBeAbleToSeeThierDetails {
+  description:  "As a patient I want to able to see my details"
+  participant(p): "blockchain.poc.Patient"
+  operation: READ
+  resource(r): "blockchain.poc.Patient"
+  condition: (p.getIdentifier() === r.getIdentifier())
+  action: ALLOW
+}
+
+rule APatientShouldBeAbleToSeeAllGps {
+  description: "As a Patient I am able to see all GPs"
+  participant: "blockchain.poc.Patient"
+  operation: READ
+  resource: "blockchain.poc.Gp"
+  action: ALLOW
+}
+
+rule APatientShouldBeAbleToSeeAllTrusts {
+  description: "As a Patient I am able to see all Trusts"
+  participant: "blockchain.poc.Patient"
+  operation: READ
+  resource: "blockchain.poc.Trust"
+  action: ALLOW
+}
+
+/***************************************************************** 
+  GP Rules
+******************************************************************/
+
+rule AGpCanSeeAllOtherGps {
+  description:  "As a GP I want to able to see all other GPs in the network"
+  participant: "blockchain.poc.Gp"
+  operation: READ
+  resource: "blockchain.poc.Gp"
+  action: ALLOW
+}
+
+rule AGpCanSeeAllTrusts {
+  description:  "As a GP I want to able to see all trusts"
+  participant: "blockchain.poc.Gp"
+  operation: READ
+  resource: "blockchain.poc.Trust"
+  action: ALLOW
+}
+
+rule AGpCanSeeOnlyPatientsToWhichTheyAreListedAsAnAccessor {
+  description:  "As a GP I want to able to see only patients whose records list me as an accessor"
+  participant(p): "blockchain.poc.Gp"
+  operation: READ
+  resource(r): "blockchain.poc.Patient"  
+  condition: (
+     r.record.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === p.getIdentifier();  
+     })
+   )
+  action: ALLOW
+}
+
+rule AGpCanSeeOnlyRecordsToWhichTheyAreListedAsAnAccessor {
+  description:  "As a GP I want to able to see only records where I am listed as an accessor"
+  participant(p): "blockchain.poc.Gp"
+  operation: READ
+  resource(r): "blockchain.poc.Record"
+  condition: (
+     r.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === p.getIdentifier();  
      })
    )
   action: ALLOW
