@@ -9,7 +9,6 @@ asset Record identified by id {
   --> Patient patient
 }
 
-
 enum AccessorType {
   o GP
   o TRUST
@@ -26,7 +25,6 @@ enum TrustType {
   o MH
 }
 
-
 abstract participant Accessor identified by code {
   o String code
   o String contact
@@ -38,7 +36,8 @@ participant Patient identified by nhsNumber {
   o String nhsNumber
   o String firstname
   o String surname
-  --> Record record
+  --> Record record optional
+  --> Gp gp
 }
 
 participant Gp extends Accessor {
