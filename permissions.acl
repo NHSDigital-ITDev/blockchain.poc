@@ -1,3 +1,7 @@
+/***************************************************************** 
+  System Admin Rules
+******************************************************************/
+
 rule SystemACL {
   description:  "As an admin I can see everything"
   participant: "org.hyperledger.composer.system.NetworkAdmin"
@@ -21,7 +25,7 @@ rule AllParticipantsHaveNetworkAccess {
 rule AllParticipantsHaveReadOnlyAssetRegistryAccess {
   description:  "All participants have access to the asset registry"
   participant: "org.hyperledger.composer.system.Participant"
-  operation: READ
+  operation: CREATE, READ
   resource: "org.hyperledger.composer.system.AssetRegistry"
   action: ALLOW
 }
@@ -47,7 +51,23 @@ rule AParticipantCanSeeOnlyHistorianRecordsToWhichTheySubmitted{
   participant(p): "org.hyperledger.composer.system.Participant"
   operation: READ
   resource(hr): "org.hyperledger.composer.system.HistorianRecord"
-  condition: (hr.participantInvoking.getIdentifier() == p.getIdentifier() && hr.transactionType.includes("Asset"))
+  condition: (hr.participantInvoking.getIdentifier() == p.getIdentifier() && !hr.transactionType.includes("UpdateBusinessNetwork"))
+  action: ALLOW
+}
+
+rule AParticipantCanCreateEntriesInTheHistorianRecord {
+  description: "Allow participants to create historian records"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule AParticipantShouldBeAbleToCreateAnAddAssetSystemTransaction {
+  description:  "A participant should be able to create an add asset system transaction"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: CREATE, READ
+  resource: "org.hyperledger.composer.system.AddAsset"
   action: ALLOW
 }
 
@@ -91,6 +111,19 @@ rule ATrustCanSeeOnlyRecordsToWhichTheyAreListedAsAnAccessor {
   resource(r): "blockchain.poc.Record"
   condition: (
      r.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === p.getIdentifier();  
+     })
+   )
+  action: ALLOW
+}
+
+rule ATrustShouldBeAbleToPerformATransferAccessTransaction {
+  description: "As a trust I want to be able to perform a transfer of patient record to another participant"
+  participant(p): "blockchain.poc.Trust"
+  operation: CREATE, READ
+  resource(r): "blockchain.poc.TransferAccess"
+  condition: (
+     r.record.accessors.some(function (accessor) {
         return accessor.getIdentifier() === p.getIdentifier();  
      })
    )
@@ -175,6 +208,27 @@ rule AGpCanSeeOnlyRecordsToWhichTheyAreListedAsAnAccessor {
   resource(r): "blockchain.poc.Record"
   condition: (
      r.accessors.some(function (accessor) {
+        return accessor.getIdentifier() === p.getIdentifier();  
+     })
+   )
+  action: ALLOW
+}
+
+rule AGpShouldBeAbleToCreateARecordForAPatient {
+  description:  "As a GP I want to able to create a record for a patient"
+  participant: "blockchain.poc.Gp"
+  operation: CREATE
+  resource: "blockchain.poc.Record"  
+  action: ALLOW
+}
+
+rule AGpShouldBeAbleToPerformATransferAccessTransaction {
+  description: "As a GP I want to be able to perform a transfer of a patient record to another participant"
+  participant(p): "blockchain.poc.Gp"
+  operation: CREATE, READ
+  resource(r): "blockchain.poc.TransferAccess"
+  condition: (
+     r.record.accessors.some(function (accessor) {
         return accessor.getIdentifier() === p.getIdentifier();  
      })
    )
